@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# --- Color Definitions ---
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# --- Argument Handling ---
+HOST=$1
+SESSION_NAME=${2:-main}
+SYNC_CONFIG=$3
+
+if [ -z "$HOST" ]; then
+    printf "${RED}Usage:${NC} stmux <ssh-alias> [session_name] [sync]\n"
+    printf "${YELLOW}Example:${NC} stmux my-server work sync\n"
+    exit 1
+fi
+
+# --- Step 1: (Optional) Sync Configuration ---
+if [ "$SYNC_CONFIG" == "sync" ]; then
+    printf "${GREEN}>>> Pushing local .tmux.conf to ${CYAN}$HOST${NC}...\n"
+    scp ~/.tmux.conf "$HOST":~/.tmux.conf
+fi
+
+# --- Step 2: Login and Attach/Create Tmux Session ---
+printf "${GREEN}>>> Connecting to ${CYAN}$HOST${GREEN} and entering session '${CYAN}$SESSION_NAME${GREEN}'...${NC}\n"
+
+# We use double quotes for the SSH command to allow the Mac to expand local color variables
+ssh -t "$HOST" "tmux attach -t '$SESSION_NAME' 2>/dev/null || tmux new-session -s '$SESSION_NAME'; \
+    printf '\n${YELLOW}Tmux detached. Stay in shell? (y/N): ${NC}'; \
+    read ans; \
+    if [ \"\$ans\" = 'y' ] || [ \"\$ans\" = 'Y' ]; then \
+        bash --login; \
+    fi"
