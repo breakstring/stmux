@@ -134,10 +134,25 @@ The current config enables:
 - split shortcuts:
   - `Prefix + \\` for horizontal layout split (`split-window -h`)
   - `Prefix + -` for vertical stack split (`split-window -v`)
+- traditional tmux split shortcuts `Prefix + %` and `Prefix + "` are intentionally unbound in this config
 - split panes start in the current pane's working directory
 - `Prefix + r` reloads `~/.tmux.conf`
 - red active pane border
 - green status bar with host, pane index, time, and status script output
+
+## Common Tmux Shortcuts
+
+In this repo, `Prefix` means either `Ctrl+b` or `Ctrl+a`.
+
+- `Prefix + c`: create a new window
+- `Prefix + ,`: rename the current window
+- `Prefix + w`: list windows and switch interactively
+- `Prefix + d`: detach from the current tmux session
+- `Prefix + \\`: split left/right
+- `Prefix + -`: split up/down
+- `Prefix + r`: reload `~/.tmux.conf`
+
+If you are used to stock tmux defaults, note again that this config does not use `%` and `"` for splitting.
 
 ## Status Bar Monitoring Script
 

@@ -149,10 +149,25 @@ stmux my-server dev sync
 - 分屏快捷键：
   - `Prefix + \\`：左右分屏，对应 `split-window -h`
   - `Prefix + -`：上下分屏，对应 `split-window -v`
+- 传统 tmux 默认的分屏快捷键 `Prefix + %` 和 `Prefix + "` 在这套配置里已经主动解绑
 - 新开的 pane 会继承当前 pane 的工作目录
 - `Prefix + r`：重新加载 `~/.tmux.conf`
 - 当前活动 pane 使用红色边框
 - 绿色状态栏，右侧显示状态脚本输出、主机名、pane 编号和时间
+
+## 常用 Tmux 快捷键
+
+在这个仓库里，`Prefix` 指的是 `Ctrl+b` 或 `Ctrl+a`。
+
+- `Prefix + c`：新建窗口
+- `Prefix + ,`：重命名当前窗口
+- `Prefix + w`：列出窗口并交互切换
+- `Prefix + d`：从当前 tmux 会话 detach
+- `Prefix + \\`：左右分屏
+- `Prefix + -`：上下分屏
+- `Prefix + r`：重新加载 `~/.tmux.conf`
+
+如果你已经习惯了原生 tmux 的默认键位，请再注意一次：这套配置不再使用 `%` 和 `"` 做分屏。
 
 ## 状态栏脚本会显示什么
 
