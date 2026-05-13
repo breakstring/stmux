@@ -20,15 +20,34 @@ fi
 
 # --- Step 1: (Optional) Sync Configuration ---
 if [ "$SYNC_CONFIG" == "sync" ]; then
-    printf "${GREEN}>>> Pushing local .tmux.conf to ${CYAN}$HOST${NC}...\n"
+    printf "${GREEN}>>> Syncing configuration to ${CYAN}$HOST${NC}...\n"
+
+    # 先确保目录存在
+    ssh "$HOST" "mkdir -p ~/.tmux"
+
+    # 尝试使用 rsync，如果失败则尝试使用 scp -r
+    if ! rsync -avz --exclude='*_index_*' ~/.tmux/ "$HOST":~/.tmux/; then
+        printf "${YELLOW}Warning: rsync failed or not found. Falling back to scp...${NC}\n"
+        # 注意：scp -r 会拷贝整个目录，用法略有不同
+        scp -r ~/.tmux/* "$HOST":~/.tmux/
+    fi
+
+    # 传输主配置文件
     scp ~/.tmux.conf "$HOST":~/.tmux.conf
+
+    # 给远程脚本加执行权限
+    ssh "$HOST" "chmod +x ~/.tmux/status.sh 2>/dev/null || true"
 fi
 
 # --- Step 2: Login and Attach/Create Tmux Session ---
 printf "${GREEN}>>> Connecting to ${CYAN}$HOST${GREEN} and entering session '${CYAN}$SESSION_NAME${GREEN}'...${NC}\n"
 
-# We use double quotes for the SSH command to allow the Mac to expand local color variables
-ssh -t "$HOST" "tmux attach -t '$SESSION_NAME' 2>/dev/null || tmux new-session -s '$SESSION_NAME'; \
+# 核心注入点说明：
+# 1. 在启动 Tmux 前注入 printf '\e[?1000l\e[?1006l' 以修复 Ghostty 乱码
+# 2. 保持你原来的 attach/new-session 逻辑
+# 3. 保持你原来的退出询问逻辑
+ssh -t "$HOST" "printf '\e[?1000l\e[?1006l'; \
+    tmux attach -t '$SESSION_NAME' 2>/dev/null || tmux new-session -s '$SESSION_NAME'; \
     printf '\n${YELLOW}Tmux detached. Stay in shell? (y/N): ${NC}'; \
     read ans; \
     if [ \"\$ans\" = 'y' ] || [ \"\$ans\" = 'Y' ]; then \
