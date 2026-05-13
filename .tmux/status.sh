@@ -49,12 +49,13 @@ else
     INDEX=$(cat "$STATE_FILE" 2>/dev/null)
     [[ -z "$INDEX" ]] && INDEX=0
     (( INDEX >= IP_COUNT )) && INDEX=0
-
+    
     CURRENT_IP="${IPS[$INDEX]}"
-
+    
     NEXT_INDEX=$(( (INDEX + 1) % IP_COUNT ))
     echo "$NEXT_INDEX" > "$STATE_FILE"
 fi
 
 # --- 5. 最终输出 ---
 echo "CPU: ${CPU_USAGE}% | MEM: ${MEM_USAGE} | IP: ${CURRENT_IP}"
+

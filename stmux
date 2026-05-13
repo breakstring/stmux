@@ -21,7 +21,7 @@ fi
 # --- Step 1: (Optional) Sync Configuration ---
 if [ "$SYNC_CONFIG" == "sync" ]; then
     printf "${GREEN}>>> Syncing configuration to ${CYAN}$HOST${NC}...\n"
-
+    
     # 先确保目录存在
     ssh "$HOST" "mkdir -p ~/.tmux"
 
@@ -34,7 +34,7 @@ if [ "$SYNC_CONFIG" == "sync" ]; then
 
     # 传输主配置文件
     scp ~/.tmux.conf "$HOST":~/.tmux.conf
-
+    
     # 给远程脚本加执行权限
     ssh "$HOST" "chmod +x ~/.tmux/status.sh 2>/dev/null || true"
 fi
