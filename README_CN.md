@@ -7,6 +7,8 @@
 
 这份文档按当前仓库里的真实实现整理，已经覆盖现在的 `status.sh` 状态脚本和 `sync` 的实际行为。
 
+![stmux 分屏效果截图：左侧是 Codex，右侧是 htop 和 shell](img.png)
+
 ## 仓库里现在有什么
 
 - `stmux`：本地命令入口。连接远端 SSH 主机后，自动接入 tmux 会话；如果会话不存在就新建。
@@ -147,7 +149,7 @@ stmux my-server dev sync
 - 通过 OSC 52 做 tmux 剪贴板集成
 - 鼠标选中文本后复制，但不立刻清掉高亮
 - 分屏快捷键：
-  - `Prefix + \\`：左右分屏，对应 `split-window -h`
+  - `Prefix + \`：左右分屏，对应 `split-window -h`
   - `Prefix + -`：上下分屏，对应 `split-window -v`
 - 传统 tmux 默认的分屏快捷键 `Prefix + %` 和 `Prefix + "` 在这套配置里已经主动解绑
 - 新开的 pane 会继承当前 pane 的工作目录
@@ -163,7 +165,7 @@ stmux my-server dev sync
 - `Prefix + ,`：重命名当前窗口
 - `Prefix + w`：列出窗口并交互切换
 - `Prefix + d`：从当前 tmux 会话 detach
-- `Prefix + \\`：左右分屏
+- `Prefix + \`：左右分屏
 - `Prefix + -`：上下分屏
 - `Prefix + r`：重新加载 `~/.tmux.conf`
 

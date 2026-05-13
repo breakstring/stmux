@@ -7,6 +7,8 @@ It wraps `ssh` + `tmux attach/new-session`, optionally syncs your local tmux con
 
 This README reflects the current implementation in this repository, including the `status.sh` monitoring script and the current `sync` behavior.
 
+![stmux screenshot with Codex and htop in a split tmux layout](img.png)
+
 ## What It Includes
 
 - `stmux`: local entry command that connects to a remote SSH host and attaches to a tmux session, or creates it if missing.
@@ -132,7 +134,7 @@ The current config enables:
 - tmux clipboard integration through OSC 52
 - copy selection without clearing the visual selection immediately
 - split shortcuts:
-  - `Prefix + \\` for horizontal layout split (`split-window -h`)
+  - `Prefix + \` for horizontal layout split (`split-window -h`)
   - `Prefix + -` for vertical stack split (`split-window -v`)
 - traditional tmux split shortcuts `Prefix + %` and `Prefix + "` are intentionally unbound in this config
 - split panes start in the current pane's working directory
@@ -148,7 +150,7 @@ In this repo, `Prefix` means either `Ctrl+b` or `Ctrl+a`.
 - `Prefix + ,`: rename the current window
 - `Prefix + w`: list windows and switch interactively
 - `Prefix + d`: detach from the current tmux session
-- `Prefix + \\`: split left/right
+- `Prefix + \`: split left/right
 - `Prefix + -`: split up/down
 - `Prefix + r`: reload `~/.tmux.conf`
 
