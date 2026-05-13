@@ -93,6 +93,15 @@ stmux my-server sync
 
 ## 常见用法
 
+### 首次使用的推荐命令
+
+```bash
+stmux my-server main sync
+```
+
+新机器首次安装后，或者第一次连接某台服务器时，建议先执行这一条。
+这样可以先把你本地的 `~/.tmux.conf` 和 `~/.tmux/status.sh` 推到远端，再进入 tmux。
+
 ### 连接默认会话
 
 ```bash
@@ -112,14 +121,6 @@ stmux my-server logs
 ```bash
 stmux my-server dev sync
 ```
-
-### 首次使用的推荐命令
-
-```bash
-stmux my-server main sync
-```
-
-这样可以先把你本地的 `~/.tmux.conf` 和 `~/.tmux/status.sh` 推到远端，再进入 tmux。
 
 ## `sync` 现在实际会做什么
 

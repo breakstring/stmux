@@ -78,6 +78,15 @@ If you run `stmux my-server sync`, the script will treat `sync` as the session n
 
 ## Common Usage
 
+### First-time recommended flow
+
+```bash
+stmux my-server main sync
+```
+
+Run this first on a new machine or before the first connection to a given server.
+That ensures the remote server receives your current `~/.tmux.conf` and `~/.tmux/status.sh` before tmux starts.
+
 ### Connect to the default session
 
 ```bash
@@ -97,14 +106,6 @@ stmux my-server logs
 ```bash
 stmux my-server dev sync
 ```
-
-### First-time recommended flow
-
-```bash
-stmux my-server main sync
-```
-
-That ensures the remote server receives your current `~/.tmux.conf` and `~/.tmux/status.sh` before tmux starts.
 
 ## What `sync` Actually Does
 
