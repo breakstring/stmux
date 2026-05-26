@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# stmux
+# 职责与边界：在本机通过 SSH 进入远端 tmux 会话，并可选择同步本机 tmux 配置；不负责安装远端 tmux 或管理远端包管理器。
+# 关键副作用：可能通过 SSH/rsync/scp 写入远端 `~/.tmux/`、`~/.tmux.conf`，并在远端启动或接入 tmux 会话。
+# 关键依赖与约束：本机依赖 bash、ssh、scp，可选 rsync；远端必须能执行 tmux，macOS/Homebrew 路径会在远端命令内做最小 PATH 兜底。
+
 # --- Color Definitions ---
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
@@ -47,8 +52,15 @@ printf "${GREEN}>>> Connecting to ${CYAN}$HOST${GREEN} and entering session '${C
 # 2. 保持你原来的 attach/new-session 逻辑
 # 3. 保持你原来的退出询问逻辑
 ssh -t "$HOST" "printf '\e[?1000l\e[?1006l'; \
-    tmux attach -t '$SESSION_NAME' 2>/dev/null || tmux new-session -s '$SESSION_NAME'; \
-    printf '\n${YELLOW}Tmux detached. Stay in shell? (y/N): ${NC}'; \
+    export PATH=\"/opt/homebrew/bin:/usr/local/bin:\$PATH\"; \
+    if ! command -v tmux >/dev/null 2>&1; then \
+        printf '\n${RED}Remote tmux was not found in SSH command PATH.${NC}\n'; \
+        printf '${YELLOW}Try: bash --login -lc \"command -v tmux\"${NC}\n'; \
+        printf '${YELLOW}If that works, add the tmux install directory to the remote non-login SSH PATH.${NC}\n'; \
+    elif ! tmux attach -t '$SESSION_NAME' 2>/dev/null; then \
+        tmux new-session -s '$SESSION_NAME'; \
+    fi; \
+    printf '\n${YELLOW}Remote command ended. Stay in shell? (y/N): ${NC}'; \
     read ans; \
     if [ \"\$ans\" = 'y' ] || [ \"\$ans\" = 'Y' ]; then \
         bash --login; \

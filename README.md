@@ -190,6 +190,7 @@ If no suitable IPv4 address is found, it prints `No IP`.
 - `tmux`
 - common Linux utilities used by the status script, especially `top`, `free`, `ip`, and `hostname`
 
+`stmux` temporarily prepends `/opt/homebrew/bin` and `/usr/local/bin` to the remote command `PATH` so macOS hosts can find a Homebrew-installed tmux.
 The status script contains a macOS branch for compatibility, but the intended target is a Linux remote server.
 
 ## Terminal Compatibility Note
@@ -212,6 +213,21 @@ Check these first:
 
 That is expected if `rsync` is not installed locally or remotely, or if `rsync` fails for another reason.
 The script will continue with `scp`.
+
+### Remote `tmux` cannot be found
+
+`stmux` starts tmux through an SSH remote command, and that command may not load the remote login shell configuration.
+If you choose to stay in the shell after the failure and `tmux` works there, the remote interactive shell and SSH remote command probably have different `PATH` values.
+
+Compare them with:
+
+```bash
+ssh my-server 'echo "$PATH"; command -v tmux || echo tmux-not-found'
+ssh my-server 'bash --login -lc "echo \$PATH; command -v tmux"'
+```
+
+If the second command finds tmux and the first does not, add the tmux install directory to the remote non-login SSH command `PATH`.
+The current script already covers common macOS/Homebrew paths, `/opt/homebrew/bin` and `/usr/local/bin`; if your tmux lives somewhere else, add that directory on the remote host.
 
 ### `ssh` host cannot be found
 

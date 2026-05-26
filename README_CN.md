@@ -205,6 +205,7 @@ stmux my-server dev sync
 - `tmux`
 - 状态脚本依赖的一些常见 Linux 命令，尤其是 `top`、`free`、`ip`、`hostname`
 
+`stmux` 会在远端启动命令里临时把 `/opt/homebrew/bin` 和 `/usr/local/bin` 加进 `PATH`，以兼容 macOS 上常见的 Homebrew tmux 安装位置。
 虽然 `status.sh` 里有一部分 macOS 兼容逻辑，但它的主要目标仍然是 Linux 远端服务器。
 
 ## 终端兼容性说明
@@ -227,6 +228,21 @@ stmux my-server dev sync
 
 这是正常的兜底逻辑。常见原因是本地或远端没有安装 `rsync`，或者 `rsync` 执行失败。
 脚本会继续使用 `scp`。
+
+### 远端提示找不到 `tmux`
+
+`stmux` 通过 SSH 远程命令启动 tmux，这类命令不一定加载远端的登录 shell 配置。
+如果你在报错后选择留在 shell，手动执行 `tmux` 又能找到，通常说明远端交互 shell 和 SSH remote command 的 `PATH` 不一样。
+
+可以先用下面两条命令对比：
+
+```bash
+ssh my-server 'echo "$PATH"; command -v tmux || echo tmux-not-found'
+ssh my-server 'bash --login -lc "echo \$PATH; command -v tmux"'
+```
+
+如果第二条能找到 tmux、第一条找不到，请把 tmux 所在目录加入远端非登录 SSH 命令能看到的 `PATH`。
+当前脚本已经内置了 macOS/Homebrew 常见路径 `/opt/homebrew/bin` 和 `/usr/local/bin` 的兜底；如果你的 tmux 安装在其他目录，需要在远端环境里显式补上。
 
 ### 找不到 SSH 主机
 
