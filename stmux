@@ -47,18 +47,16 @@ fi
 # --- Step 2: Login and Attach/Create Tmux Session ---
 printf "${GREEN}>>> Connecting to ${CYAN}$HOST${GREEN} and entering session '${CYAN}$SESSION_NAME${GREEN}'...${NC}\n"
 
-# 核心注入点说明：
-# 1. 在启动 Tmux 前注入 printf '\e[?1000l\e[?1006l' 以修复 Ghostty 乱码
-# 2. 保持你原来的 attach/new-session 逻辑
-# 3. 保持你原来的退出询问逻辑
+# 启动 tmux 前关闭鼠标上报，避免 Ghostty 显示残留的鼠标事件。
+# SSH 远程命令可能没有继承登录 locale，使用 -u 让 tmux 客户端以 UTF-8 输出。
 ssh -t "$HOST" "printf '\e[?1000l\e[?1006l'; \
     export PATH=\"/opt/homebrew/bin:/usr/local/bin:\$PATH\"; \
     if ! command -v tmux >/dev/null 2>&1; then \
         printf '\n${RED}Remote tmux was not found in SSH command PATH.${NC}\n'; \
         printf '${YELLOW}Try: bash --login -lc \"command -v tmux\"${NC}\n'; \
         printf '${YELLOW}If that works, add the tmux install directory to the remote non-login SSH PATH.${NC}\n'; \
-    elif ! tmux attach -t '$SESSION_NAME' 2>/dev/null; then \
-        tmux new-session -s '$SESSION_NAME'; \
+    elif ! tmux -u attach -t '$SESSION_NAME' 2>/dev/null; then \
+        tmux -u new-session -s '$SESSION_NAME'; \
     fi; \
     printf '\n${YELLOW}Remote command ended. Stay in shell? (y/N): ${NC}'; \
     read ans; \

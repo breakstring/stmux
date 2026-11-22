@@ -48,3 +48,10 @@ if ! grep -q 'Remote tmux was not found' "$CAPTURE_FILE"; then
     cat "$CAPTURE_FILE" >&2
     exit 1
 fi
+
+if ! grep -Fq "tmux -u attach -t 'main'" "$CAPTURE_FILE" ||
+   ! grep -Fq "tmux -u new-session -s 'main'" "$CAPTURE_FILE"; then
+    echo "expected both tmux paths to enable UTF-8 terminal output" >&2
+    cat "$CAPTURE_FILE" >&2
+    exit 1
+fi
